@@ -33,7 +33,7 @@ public class RegistrationController {
 	 * @return returns registered user
 	 */
 	@PostMapping("/user")
-	public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) throws ApplicationException {
+	public ResponseEntity<Object> registerUser(@RequestBody UserDTO userDTO) throws ApplicationException {
 		validateUser(userDTO);
 		return new ResponseEntity<>(registrationService.registerUser(userDTO), HttpStatus.OK);
 	}

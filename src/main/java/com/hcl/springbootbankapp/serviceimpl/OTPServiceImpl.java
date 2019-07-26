@@ -13,13 +13,10 @@ import com.hcl.springbootbankapp.service.OTPService;
 
 @Service
 public class OTPServiceImpl implements OTPService {
-	Random rndm_method = new Random();
-	private final static int otpLength = 6; 
-	private final static int expireTime=5;
-	private final static String sub = "OTP for transaction";
-	private final static String bodyInit = " Dear Custemer, Your OTP for the transaction is ";
-	private final static String bodyFinal = "";
 
+	Random rndmMethod = new Random();
+	private static final int OTPLENGTH = 6; 
+	private static final String SUB = "OTP for transaction";
 	@Autowired
 	OTPRepository oTPRepository;
 	
@@ -29,25 +26,25 @@ public class OTPServiceImpl implements OTPService {
 	
 	@Override
 	public OtpDetails generateOTP(String custId, Long tranId, String emailId,String message) {
-		// TODO Auto-generated method stub
+
 		OtpDetails otpDetails = oTPRepository.getOtpDetailsByTransIdAndCustId(custId, tranId);
 		if(otpDetails != null) {
 			oTPRepository.delete(otpDetails);
 		}
-		String otpCode = getRanOTP(otpLength);
+		String otpCode = getRanOTP(OTPLENGTH);
 		OtpDetails otp = new OtpDetails();
 		otp.setCustomerId(custId);
 		otp.setOtpCode(otpCode);
 		otp.setTime(LocalDateTime.now());
 		otp.setRefId(tranId);
 		oTPRepository.save(otp);
-		emailServiceImpl.sendSimpleMessage(sub,message+otpCode, emailId);
+		emailServiceImpl.sendSimpleMessage(SUB,message+otpCode, emailId);
 		return otp;
 	}
 
 	@Override
 	public boolean validate(String custId, Long tranId,String otpToValidate) throws ApplicationException {
-		// TODO Auto-generated method stub
+
 		OtpDetails otp = oTPRepository.getOtpDetailsByTransIdAndCustId(custId, tranId);
 		if(otp != null) {
 			if(otp.getOtpCode().equals(otpToValidate)) {
@@ -64,12 +61,11 @@ public class OTPServiceImpl implements OTPService {
 		// Using numeric values
 		String numbers = "0123456789";
 		// Using random method
-
 		char[] otp = new char[len];
 		for (int i = 0; i < len; i++) {
 			// Use of charAt() method : to get character value
 			// Use of nextInt() as it is scanning the value as int
-			otp[i] = numbers.charAt(rndm_method.nextInt(numbers.length()));
+			otp[i] = numbers.charAt(rndmMethod.nextInt(numbers.length()));
 		}
 		return new String(otp);
 	}
