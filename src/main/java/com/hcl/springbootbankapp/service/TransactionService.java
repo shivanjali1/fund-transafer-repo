@@ -2,15 +2,20 @@ package com.hcl.springbootbankapp.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.hcl.springbootbankapp.DTO.FundTransferRequest;
+import com.hcl.springbootbankapp.DTO.ResponseDTO;
 import com.hcl.springbootbankapp.entity.Account;
 import com.hcl.springbootbankapp.entity.TransactionHistory;
-import com.hcl.springbootbankapp.model.FundTransferRequest;
+import com.hcl.springbootbankapp.entity.User;
+import com.hcl.springbootbankapp.exception.ApplicationException;
 import com.hcl.springbootbankapp.repository.AccountRepository;
 import com.hcl.springbootbankapp.repository.TransactionHistoryRepository;
 import com.hcl.springbootbankapp.repository.UserRepository;
@@ -45,11 +50,32 @@ public class TransactionService {
 	 * @returns fund transfer status
 	 */
 	@Transactional
-	public String fundTransfer(FundTransferRequest fundTransferRequest) throws Exception {
-		Account account = accountRepository.findByUserName(fundTransferRequest.getUsername());
+	public ResponseDTO fundTransfer(FundTransferRequest fundTransferRequest) throws ApplicationException {
+		
+		ResponseDTO responseDTO = new ResponseDTO();
+		Optional<User> optionalCustomerId = userRepository.findByCustomerId(fundTransferRequest.getCustomerId());
+		User customerId;
+		if(optionalCustomerId.isPresent()) {
+			customerId = optionalCustomerId.get();
+		}else {
+			throw new ApplicationException("Incorrect customer id");
+		}
+		
+		Optional<User> optionalPayeeCustomerId = userRepository.findByCustomerId(fundTransferRequest.getPayeeCustomerId());
+		User payeecustomerId;
+		if(optionalPayeeCustomerId.isPresent()) {
+			payeecustomerId = optionalPayeeCustomerId.get();
+		}else {
+			throw new ApplicationException("Incorrect payee customer id");
+		}
+		
+		Account account = accountRepository.findByUserId(customerId.getId());
+		Account payeeaccount = accountRepository.findByUserId(payeecustomerId.getId());
+		
 		Long ownAccountNo = account.getAccountNo();
-		Long payeeAccountNo = fundTransferRequest.getPayeeAccountNo();
-		Double transferamt = fundTransferRequest.getTrsandferAmt();
+		Long payeeAccountNo = payeeaccount.getAccountNo();
+		
+		Double transferamt = fundTransferRequest.getTransferAmount();
 		List<Account> payees = accountRepository.findByAccountNoNotIn(ownAccountNo);
 
 		boolean isValidPayee = false;
@@ -86,9 +112,12 @@ public class TransactionService {
 			payeeTransactionHistory.setTrsansactionAmt(transferamt);
 
 			transactionHistoryRepository.save(payeeTransactionHistory);
-
+			responseDTO.setHttpStatus(HttpStatus.OK);
+			responseDTO.setMessage("Fund transfered sucessfully");
+		}else {
+			throw new ApplicationException("Invalid payee");
 		}
 
-		return "Fund transfered sucessfully";
+		return responseDTO;
 	}
 }

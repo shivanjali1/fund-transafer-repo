@@ -13,8 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hcl.springbootbankapp.DTO.FundTransferRequest;
 import com.hcl.springbootbankapp.entity.Account;
-import com.hcl.springbootbankapp.model.FundTransferRequest;
+import com.hcl.springbootbankapp.exception.ApplicationException;
 import com.hcl.springbootbankapp.service.TransactionService;
 
 /*
@@ -26,10 +27,14 @@ public class TransactionController {
 
 	@Autowired
 	TransactionService transactionService;
-	
+
+	private static final String ERROR_MSG = "Mandetory Element missing : ";
+
 	/*
 	 * This method is used to get all payees
+	 * 
 	 * @param accountNO gets account Number
+	 * 
 	 * @return return list of all payees
 	 */
 	@GetMapping("/payee/{accountNO}")
@@ -40,37 +45,31 @@ public class TransactionController {
 
 	/*
 	 * This method is used for fund transfer
-	 * @param fundTransferRequest gets own login id, payee account number and transfer amount
+	 * 
+	 * @param fundTransferRequest gets own login id, payee account number and
+	 * transfer amount
+	 * 
 	 * @returns fund transfer status
 	 */
 	@PostMapping("/fundTransfer")
-	public ResponseEntity<String> fundTransafer(@RequestBody FundTransferRequest fundTransferRequest) {
-		String status;
-		try {
-			validateRequest(fundTransferRequest);
-		} catch (Exception e) {
-			return new ResponseEntity<String>("Invalid Request. Error Message : " + e.getMessage(),HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<Object> fundTransafer(@RequestBody FundTransferRequest fundTransferRequest) throws Exception {
 
-		try {
-			status = transactionService.fundTransfer(fundTransferRequest);
-			System.out.println(status);
-		} catch (Exception e) {
-			return new ResponseEntity<String>("Error Message : " + e.getMessage(),HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<String>(status, HttpStatus.OK);
+		validateRequest(fundTransferRequest);
+		return new ResponseEntity<>(transactionService.fundTransfer(fundTransferRequest), HttpStatus.OK);
 
 	}
 
-	private boolean validateRequest(FundTransferRequest lFundTransferRequest) throws Exception {
+	private void validateRequest(FundTransferRequest lFundTransferRequest) throws ApplicationException {
 
-		if (StringUtils.isEmpty(lFundTransferRequest.getPayeeAccountNo())) {
-			throw new Exception("Mandetory element missing: PayeeAccountNo");
+		if (StringUtils.isEmpty(lFundTransferRequest.getCustomerId())) {
+			throw new ApplicationException(ERROR_MSG + "CustomerId");
 		}
-		if (StringUtils.isEmpty(lFundTransferRequest.getTrsandferAmt())) {
-			throw new Exception("Mandetory element missing: Trsandfer Amount");
+		if (StringUtils.isEmpty(lFundTransferRequest.getTransferAmount())) {
+			throw new ApplicationException(ERROR_MSG + "transfer Amount");
 		}
-		return true;
+		if (StringUtils.isEmpty(lFundTransferRequest.getPayeeCustomerId())) {
+			throw new ApplicationException(ERROR_MSG + "PayeeCustomerId");
+		}
 
 	}
 

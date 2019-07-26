@@ -41,9 +41,9 @@ public class LoginService {
 		
 		boolean isPresent = OptionalUser.isPresent();
 		if (isPresent) {
-			Account lAccount = accountRepository.findByUserName(OptionalUser.get().getUsername());
+			Account lAccount = accountRepository.findByUserId(OptionalUser.get().getId());
 
-			Pageable sortedByTransactionTime = PageRequest.of(0, 2, Sort.by("transactionTime").descending());
+			Pageable sortedByTransactionTime = PageRequest.of(0, 10, Sort.by("transactionTime").descending());
 			List<TransactionHistory> lTenTransactionByAccountNo = transactionHistoryRepository
 					.findByAccountNo(lAccount.getAccountNo(), sortedByTransactionTime);
 
