@@ -1,5 +1,7 @@
 package com.hcl.springbootbankapp.serviceimpl;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -31,16 +33,16 @@ public class AddPayeeServiceImpl implements AddPayeeService {
 	public ResponseDTO addPayee(String loggedUserId, String payeeUserId) {
 		// TODO Auto-generated method stub
 		
-		User payeeUser = userRepository.findByCustomerId(payeeUserId);
-		User loggedUser = userRepository.findByCustomerId(loggedUserId);
+		Optional<User> payeeUser = userRepository.findByCustomerId(payeeUserId);
+		Optional<User> loggedUser = userRepository.findByCustomerId(loggedUserId);
 		
 		Payee payee = new Payee();
 		payee.setStatus(PayeeStatusUtil.ADD_PENDING);
-		payee.setPayeeId(payeeUser.getId());
-		payee.setCustId(loggedUser.getId());
+		payee.setPayeeId((payeeUser.get()).getId());
+		payee.setCustId((loggedUser.get()).getId());
 		payee = payeeRepository.save(payee);
 		
-		oTPService.generateOTP(loggedUser.getCustomerId(), payee.getId(), loggedUser.getEmail(),bodyInit);
+		oTPService.generateOTP((loggedUser.get()).getCustomerId(), payee.getId(), (loggedUser.get()).getEmail(),bodyInit);
 		
 		ResponseDTO responseObject = new ResponseDTO();
 		responseObject.setHttpStatus(HttpStatus.OK);
