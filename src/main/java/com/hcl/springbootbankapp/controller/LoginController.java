@@ -15,9 +15,7 @@ import com.hcl.springbootbankapp.entity.User;
 import com.hcl.springbootbankapp.service.LoginService;
 
 
-/*
- * This is LoginController class used to provide user login services
- */
+
 @RestController
 @RequestMapping("/login")
 public class LoginController {
@@ -42,3 +40,4 @@ public class LoginController {
 	}
 
 }
+

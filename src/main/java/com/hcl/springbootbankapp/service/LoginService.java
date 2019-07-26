@@ -16,9 +16,8 @@ import com.hcl.springbootbankapp.repository.AccountRepository;
 import com.hcl.springbootbankapp.repository.TransactionHistoryRepository;
 import com.hcl.springbootbankapp.repository.UserRepository;
 
-/*
- * This is LoginService class used to provide user login services
- */
+
+
 @Service
 public class LoginService {
 	
@@ -54,3 +53,4 @@ public class LoginService {
 	}
 	
 }
+

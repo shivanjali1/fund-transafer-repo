@@ -11,8 +11,11 @@ import com.hcl.springbootbankapp.entity.User;
 public interface UserRepository extends JpaRepository<User, Long> {
 	
 	
+	
 	public Optional<User> findByUsernameAndPassword(String pUserName, String pPassword);
 	
 	public Optional<User> findByCustomerId(String customerId);
+
+	
 
 }

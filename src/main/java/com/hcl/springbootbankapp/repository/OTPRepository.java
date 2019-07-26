@@ -10,7 +10,7 @@ import com.hcl.springbootbankapp.entity.OtpDetails;
 @Repository
 public interface OTPRepository extends JpaRepository<OtpDetails, Long> {
 
-	@Query("from OtpDetails where customerId = :custId and transactionId = :transId")
+	@Query("from OtpDetails where customerId = :custId and refId = :transId")
 	OtpDetails getOtpDetailsByTransIdAndCustId(@Param("custId") String custId, @Param("transId") Long tranId);
 
 }
