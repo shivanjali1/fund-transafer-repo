@@ -39,9 +39,9 @@ public class TransactionController {
 	 * @return return list of all payees
 	 */
 	@GetMapping("/payee/{accountNO}")
-	public ResponseEntity<?> getPayee(@PathVariable Long accountNO) {
+	public ResponseEntity<Object> getPayee(@PathVariable Long accountNO) {
 		List<Account> payees = transactionService.getPayees(accountNO);
-		return new ResponseEntity<List<Account>>(payees, HttpStatus.OK);
+		return new ResponseEntity<>(payees, HttpStatus.OK);
 	}
 
 	/*
@@ -53,7 +53,7 @@ public class TransactionController {
 	 * @returns fund transfer status
 	 */
 	@PostMapping("/fundTransfer")
-	public ResponseEntity<Object> fundTransafer(@RequestBody FundTransferRequest fundTransferRequest) throws Exception {
+	public ResponseEntity<Object> fundTransafer(@RequestBody FundTransferRequest fundTransferRequest) throws ApplicationException {
 
 		validateRequest(fundTransferRequest);
 		return new ResponseEntity<>(transactionService.fundTransfer(fundTransferRequest), HttpStatus.OK);

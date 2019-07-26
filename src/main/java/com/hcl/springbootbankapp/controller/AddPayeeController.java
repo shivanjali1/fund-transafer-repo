@@ -16,6 +16,7 @@ import com.hcl.springbootbankapp.exception.ApplicationException;
 import com.hcl.springbootbankapp.model.ValidateOTP;
 import com.hcl.springbootbankapp.service.AddPayeeService;
 
+
 @RestController
 @RequestMapping(value = "/addPayee")
 public class AddPayeeController {
@@ -26,6 +27,13 @@ public class AddPayeeController {
 	@Autowired
 	AddPayeeService addPayeeService;
 	
+	/**
+	 * this method is used to make a request to add a new payee for the customer
+	 * @param loggedUserId takes logged user id
+	 * @param payeeUserId takes payee user id as input
+	 * @return returns response object with response data, message,http status
+	 * @throws ApplicationException throws custom exception if error occurred
+	 */
 	@PostMapping
 	public ResponseEntity<ResponseDTO> addPayee(@RequestParam String loggedUserId, @RequestParam String payeeUserId) throws ApplicationException{
 		validateRequest(loggedUserId, payeeUserId);

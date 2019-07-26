@@ -37,6 +37,13 @@ public class AddPayeeServiceImpl implements AddPayeeService {
 	@Autowired
 	OTPServiceImpl otpServiceImpl;
 	
+	/**
+	 *@loggedUserId takes logged user id from controller
+	 *@payeeUserId takes payee user id from controller
+	 *returns returns payee addition request
+	 */
+	
+	
 	@Override
 	public ResponseDTO addPayee(String loggedUserId, String payeeUserId) {
 
