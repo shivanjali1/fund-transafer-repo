@@ -25,6 +25,6 @@ public class Payee {
 	private Long payeeId;
 
 	@Column(name = "status")
-	private String Status;
+	private String status;
 
 }

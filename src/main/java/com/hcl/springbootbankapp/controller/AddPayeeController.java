@@ -3,6 +3,7 @@ package com.hcl.springbootbankapp.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,14 +20,19 @@ import com.hcl.springbootbankapp.service.AddPayeeService;
 @RequestMapping(value = "/addPayee")
 public class AddPayeeController {
 	
+	private static final String ERROR_MSG = "Mandetory Element missing : ";
+
+	
 	@Autowired
 	AddPayeeService addPayeeService;
 	
 	@PostMapping
-	public ResponseEntity<ResponseDTO> addPayee(@RequestParam String loggedUserId, @RequestParam String payeeUserId){
-		
+	public ResponseEntity<ResponseDTO> addPayee(@RequestParam String loggedUserId, @RequestParam String payeeUserId) throws ApplicationException{
+		validateRequest(loggedUserId, payeeUserId);
 		ResponseDTO returneResponse = addPayeeService.addPayee(loggedUserId,payeeUserId);
-		
+		if("Initiation Failed".equals(returneResponse.getMessage())) {
+			throw new ApplicationException("Adding Benificiary Failed");
+		}
 		return new ResponseEntity<>(returneResponse, HttpStatus.OK);
 	}
 	
@@ -35,6 +41,20 @@ public class AddPayeeController {
 		
 		ResponseDTO returnResponse = addPayeeService.validateOtp(validateOTP);
 		return new ResponseEntity<>(returnResponse, HttpStatus.NO_CONTENT);
+	}
+	
+	
+	private void validateRequest(String loggedUserId, String payeeUserId) throws ApplicationException {
+		
+		if (StringUtils.isEmpty(loggedUserId)) {
+			throw new ApplicationException(ERROR_MSG + "loggedUserId");
+		}
+		if (StringUtils.isEmpty(payeeUserId)) {
+			throw new ApplicationException(ERROR_MSG + "payeeUserId Id");
+		}
+		if (payeeUserId.equals(loggedUserId)) {
+			throw new ApplicationException(ERROR_MSG + "You Cannot add yourself as payee");
+		}
 	}
 	
 }
