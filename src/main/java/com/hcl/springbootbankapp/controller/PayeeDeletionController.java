@@ -22,6 +22,6 @@ public class PayeeDeletionController {
 	@PutMapping("/validate")
 	public ResponseEntity<Object> validatePayeeDeletion(){
 		
-		return new ResponseEntity<>("", HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>("Payee Deleted successfully", HttpStatus.NO_CONTENT);
 	}
 }
