@@ -24,7 +24,7 @@ public class PayeeDeletionController {
 	
 	@PutMapping("/validate")
 	public ResponseEntity<Object> validatePayeeDeletion(@RequestBody ValidateOTP validateOTP) throws ApplicationException{
-		payeeDeletionService.validateOtp(validateOTP);
-		return new ResponseEntity<>("Payee Deleted successfully", HttpStatus.NO_CONTENT);
+		//payeeDeletionService.validateOtp(validateOTP);
+		return new ResponseEntity<>(payeeDeletionService.validateOtp(validateOTP), HttpStatus.NO_CONTENT);
 	}
 }

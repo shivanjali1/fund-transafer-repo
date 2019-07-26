@@ -23,7 +23,7 @@ public class PayeeDeletionServiceImpl implements PayeeDeletionService {
 		
 		if(otpServiceImpl.validate(validateOTP.getCustomerId(), validateOTP.getReferenceId(), validateOTP.getOtp())) {
 			payeeRepository.deletePayee(validateOTP.getReferenceId(), PayeeStatusUtil.DELETE_COMPLETED);
-			return "OTP validated for deleting payee ";
+			return "OTP validated for deleting payee";
 		}
 		throw new ApplicationException("OTP is not valid for deleting payee ");
 	}
