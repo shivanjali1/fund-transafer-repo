@@ -1,10 +1,12 @@
 package com.hcl.springbootbankapp.service;
 
-import java.util.List;
-
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.hcl.springbootbankapp.DTO.ResponseDTO;
+import com.hcl.springbootbankapp.DTO.UserDTO;
 import com.hcl.springbootbankapp.entity.Account;
 import com.hcl.springbootbankapp.entity.User;
 import com.hcl.springbootbankapp.repository.AccountRepository;
@@ -31,11 +33,14 @@ public class RegistrationService {
 	 * @param user gets username and password
 	 * @return returns registered user 
 	 */
-	public User registerUser(User lUser) {
+	public ResponseDTO registerUser(UserDTO userDTO) {
 		
-		String customerId =  lUser.getFirstName().substring(0,3)+lUser.getPhoneNumber().substring(0,3).substring(0,3);
-		lUser.setCustomerId(customerId);
-		User savedUser = userRepository.save(lUser);
+		User user = new User();
+		BeanUtils.copyProperties(userDTO, user);
+		ResponseDTO responseDTO = new ResponseDTO();
+		String customerId =  user.getFirstName().substring(0,3)+user.getPhoneNumber().substring(0,3).substring(0,3) + System.currentTimeMillis()/3600;
+		user.setCustomerId(customerId);
+		User savedUser = userRepository.save(user);
 		
 		Long accountNo = (long) (Math.random() * 100000 + 3333300000L);
 		Account account = new Account();
@@ -44,16 +49,11 @@ public class RegistrationService {
 		account.setUserId(savedUser.getId());
 
 		accountRepository.save(account);
-		return savedUser;
+		
+		responseDTO.setHttpStatus(HttpStatus.OK);
+		responseDTO.setMessage("User sucessfully registered");
+		responseDTO.setData(savedUser);
+		return responseDTO;
 	}
 	
-	/*
-	 * This method is to get all users
-	 * @return returns list of all users
-	 */
-	public List<User> getUser() {
-		return userRepository.findAll();
-	}
-
-
 }
