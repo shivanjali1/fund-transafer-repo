@@ -10,6 +10,7 @@ import com.hcl.springbootbankapp.entity.User;
 import com.hcl.springbootbankapp.repository.PayeeRepository;
 import com.hcl.springbootbankapp.repository.UserRepository;
 import com.hcl.springbootbankapp.service.AddPayeeService;
+import com.hcl.springbootbankapp.service.OTPService;
 import com.hcl.springbootbankapp.util.PayeeStatusUtil;
 @Service
 public class AddPayeeServiceImpl implements AddPayeeService {
@@ -19,6 +20,8 @@ public class AddPayeeServiceImpl implements AddPayeeService {
 	
 	@Autowired
 	PayeeRepository payeeRepository;
+	@Autowired
+	OTPService oTPService;
 	
 	@Override
 	public ResponseDTO addPayee(String loggedUserId, String payeeUserId) {
@@ -32,6 +35,8 @@ public class AddPayeeServiceImpl implements AddPayeeService {
 		payee.setPayeeId(payeeUser.getId());
 		payee.setCustId(loggedUser.getId());
 		payeeRepository.save(payee);
+		
+		oTPService.generateOTP(payeeUser.getId(), loggedUser.getId(), payeeUser.getEmail());
 		
 		ResponseDTO responseObject = new ResponseDTO();
 		responseObject.setHttpStatus(HttpStatus.OK);
