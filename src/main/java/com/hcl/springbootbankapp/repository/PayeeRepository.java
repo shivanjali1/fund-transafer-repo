@@ -9,6 +9,6 @@ import com.hcl.springbootbankapp.entity.Payee;
 @Repository
 public interface PayeeRepository extends JpaRepository<Payee, Long> {
 
-	@Query(value="update payee set status = :status where id = :referenceId ",nativeQuery = true)
+	@Query(value="update Payee set status = :status where id = :referenceId ",nativeQuery = true)
 	public void updatePayeeStatus(Long referenceId, String status);
 }
