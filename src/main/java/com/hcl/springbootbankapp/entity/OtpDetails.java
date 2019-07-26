@@ -23,8 +23,8 @@ public class OtpDetails implements Serializable {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	@Column(name = "opt_id")
-	private  Long optId;
+	@Column(name = "otp_id")
+	private  Long otpId;
 	
 	private String customerId;
 	
