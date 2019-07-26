@@ -91,14 +91,14 @@ public class TransactionService {
 			Account payeeAccount = accountRepository.findByAccountNo(payeeAccountNo);
 
 			ownAccount.setAccountBalance(ownAccount.getAccountBalance() - transferamt);
-			accountRepository.save(ownAccount);
+			Account saveOwnAccount = accountRepository.save(ownAccount);
 
 			payeeAccount.setAccountBalance(payeeAccount.getAccountBalance() + transferamt);
-			accountRepository.save(payeeAccount);
+			Account savePayeeAccount = accountRepository.save(payeeAccount);
 
 			TransactionHistory ownTransactionHistory = new TransactionHistory();
 			ownTransactionHistory.setAccountNo(ownAccountNo);
-			ownTransactionHistory.setFinalBalance(ownAccount.getAccountBalance() - transferamt);
+			ownTransactionHistory.setFinalBalance(saveOwnAccount.getAccountBalance());
 			ownTransactionHistory.setTransactionTime(LocalDateTime.now());
 			ownTransactionHistory.setTransactionType("Debit");
 			ownTransactionHistory.setTrsansactionAmt(transferamt);
@@ -107,7 +107,7 @@ public class TransactionService {
 
 			TransactionHistory payeeTransactionHistory = new TransactionHistory();
 			payeeTransactionHistory.setAccountNo(payeeAccountNo);
-			payeeTransactionHistory.setFinalBalance(payeeAccount.getAccountBalance() + transferamt);
+			payeeTransactionHistory.setFinalBalance(savePayeeAccount.getAccountBalance());
 			payeeTransactionHistory.setTransactionTime(LocalDateTime.now());
 			payeeTransactionHistory.setTransactionType("Credit");
 			payeeTransactionHistory.setTrsansactionAmt(transferamt);
