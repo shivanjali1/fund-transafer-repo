@@ -7,6 +7,8 @@ public class ValidateOTP {
 
 	private String customerId;
 	
+	private String payeeId;
+	
 	private Long referenceId;
 	
 	private String otp;

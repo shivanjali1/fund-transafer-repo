@@ -7,6 +7,6 @@ import com.hcl.springbootbankapp.model.ValidateOTP;
 
 public interface PayeeDeletionService {
 
-	public String validateOtp(ValidateOTP validateOTP) throws ApplicationException;
+	public ResponseDTO validateOtp(ValidateOTP validateOTP) throws ApplicationException;
 	public ResponseDTO deletePayee(String customerId, String payeeId) throws ApplicationException;
 }

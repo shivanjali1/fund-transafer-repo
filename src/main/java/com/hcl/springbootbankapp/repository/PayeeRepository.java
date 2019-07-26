@@ -10,9 +10,9 @@ import com.hcl.springbootbankapp.entity.Payee;
 @Repository
 public interface PayeeRepository extends JpaRepository<Payee, Long> {
 
-	@Query(value = "update payee set status = :status where id = :referenceId ", nativeQuery = true)
-	public void updatePayeeStatus(Long referenceId, String status);
+	@Query(value = "SELECT * FROM Payee where id = :refId", nativeQuery = true)
+	Payee getPayeeByRefId(@Param("refId") Long refId);
 
-	@Query(value = "select id from Payee where custId = :custId and payeeId = :payeeId", nativeQuery = true)
-	Long getrefIdsByCustIdAndPayeeId(@Param("custId") Long custId, @Param("payeeId") Long payeeId);
+	@Query(value = "select * from Payee where cust_id = :custId and payee_id = :payeeId", nativeQuery = true)
+	Payee getrefIdsByCustIdAndPayeeId(@Param("custId") Long custId, @Param("payeeId") Long payeeId);
 }
