@@ -7,17 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import com.hcl.springbootbankapp.DTO.ResponseDTO;
+import com.hcl.springbootbankapp.DTO.UserDTO;
 import com.hcl.springbootbankapp.entity.Account;
 import com.hcl.springbootbankapp.entity.TransactionHistory;
 import com.hcl.springbootbankapp.entity.User;
+import com.hcl.springbootbankapp.exception.ApplicationException;
 import com.hcl.springbootbankapp.repository.AccountRepository;
 import com.hcl.springbootbankapp.repository.TransactionHistoryRepository;
 import com.hcl.springbootbankapp.repository.UserRepository;
 
-
-
+/*
+ * This is LoginService class used to provide user login services
+ */
 @Service
 public class LoginService {
 	
@@ -35,7 +40,13 @@ public class LoginService {
 	 * @param user to get username and password
 	 * @return returns list of last 10 transaction history of login user.
 	 */
-	public List<TransactionHistory> loginUser(User user) throws Exception {
+	public ResponseDTO loginUser(UserDTO userDTO) throws ApplicationException {
+		User user = new User();
+		user.setUsername(userDTO.getUsername());
+		user.setPassword(userDTO.getPassword());
+		
+		ResponseDTO responseDTO = new ResponseDTO();
+		
 		Optional<User> OptionalUser = userRepository.findByUsernameAndPassword(user.getUsername(), user.getPassword());
 		
 		boolean isPresent = OptionalUser.isPresent();
@@ -46,11 +57,13 @@ public class LoginService {
 			List<TransactionHistory> lTenTransactionByAccountNo = transactionHistoryRepository
 					.findByAccountNo(lAccount.getAccountNo(), sortedByTransactionTime);
 
-			return lTenTransactionByAccountNo;
+			responseDTO.setData(lTenTransactionByAccountNo);
+			responseDTO.setMessage("User loged in sucessfully");
+			responseDTO.setHttpStatus(HttpStatus.OK);
+			return responseDTO;
 		} else {
-			throw new Exception("User is not authentited.");
+			throw new ApplicationException("User is not authentited.");
 		}
 	}
 	
 }
-
