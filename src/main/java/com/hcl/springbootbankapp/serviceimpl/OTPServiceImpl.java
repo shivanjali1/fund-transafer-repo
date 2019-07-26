@@ -13,7 +13,7 @@ import com.hcl.springbootbankapp.service.OTPService;
 
 @Service
 public class OTPServiceImpl implements OTPService {
-
+	Random rndm_method = new Random();
 	private final static int otpLength = 6; 
 	private final static int expireTime=5;
 	private final static String sub = "OTP for transaction";
@@ -64,7 +64,7 @@ public class OTPServiceImpl implements OTPService {
 		// Using numeric values
 		String numbers = "0123456789";
 		// Using random method
-		Random rndm_method = new Random();
+
 		char[] otp = new char[len];
 		for (int i = 0; i < len; i++) {
 			// Use of charAt() method : to get character value
