@@ -69,7 +69,7 @@ public class RegistrationController {
 		if (StringUtils.isEmpty(user.getAddress())) {
 			throw new Exception("Mandetory element missing: Address");
 		}
-		if (StringUtils.isEmpty(user.getdOB())) {
+		if (StringUtils.isEmpty(user.getDOB())) {
 			throw new Exception("Mandetory element missing: Date of birth");
 		}
 		if (StringUtils.isEmpty(user.getEmail())) {

@@ -16,11 +16,13 @@ public class Payee {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	@Column(name = "first_name", nullable = false)
+	@Column(name = "first_name")
 	private Long custId;
 
-	@Column(name = "last_name",  nullable = false)
+	@Column(name = "last_name")
 	private Long payeeId;
 
+	@Column(name = "status")
+	private String Status;
 
 }

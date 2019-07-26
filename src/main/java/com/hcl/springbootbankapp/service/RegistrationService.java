@@ -38,7 +38,7 @@ public class RegistrationService {
 		Account account = new Account();
 		account.setAccountBalance(10000.0);
 		account.setAccountNo(accountNo);
-		account.setUserName(savedUser.getUsername());
+		//account.setUserName(savedUser.getUsername());
 
 		accountRepository.save(account);
 		return savedUser;

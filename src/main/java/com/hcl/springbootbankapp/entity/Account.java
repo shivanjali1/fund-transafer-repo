@@ -5,13 +5,22 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+import lombok.Data;
 
 /*
  * This is account entity
  */
+@Data
 @Entity
 @Table(name = "account")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Account {
 	
 	@Id
@@ -25,46 +34,8 @@ public class Account {
 	@Column(name = "account_balance", nullable = false)
 	private Double accountBalance;
 	
-	@Column(name = "user_name", nullable = false )
-	private String userName;
+	@OneToOne
+	@JoinColumn(name = "user_id")
+	private User userDetails;
 
-	public Long getId() {
-		return id;
-	}
-
-	public void setId(Long id) {
-		this.id = id;
-	}
-
-	public Long getAccountNo() {
-		return accountNo;
-	}
-
-	public void setAccountNo(Long accountNo) {
-		this.accountNo = accountNo;
-	}
-
-	public Double getAccountBalance() {
-		return accountBalance;
-	}
-
-	public void setAccountBalance(Double accountBalance) {
-		this.accountBalance = accountBalance;
-	}
-
-	public String getUserName() {
-		return userName;
-	}
-
-	public void setUserName(String userName) {
-		this.userName = userName;
-	}
-
-	@Override
-	public String toString() {
-		return "Account [id=" + id + ", accountNo=" + accountNo + ", accountBalance=" + accountBalance + ", userName="
-				+ userName + "]";
-	}
-
-	
 }
