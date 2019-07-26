@@ -33,12 +33,12 @@ public class RegistrationController {
 	 * @return returns registered user
 	 */
 	@PostMapping("/user")
-	public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) throws ApplicationException {
+	public ResponseEntity<Object> registerUser(@RequestBody UserDTO userDTO) throws ApplicationException {
 		validateUser(userDTO);
 		return new ResponseEntity<>(registrationService.registerUser(userDTO), HttpStatus.OK);
 	}
 
-	private boolean validateUser(UserDTO userDTO) throws ApplicationException {
+	private void validateUser(UserDTO userDTO) throws ApplicationException {
 
 		if (StringUtils.isEmpty(userDTO.getAddress())) {
 			throw new ApplicationException(ERROR_MSG + "Address");
@@ -67,7 +67,6 @@ public class RegistrationController {
 		if (StringUtils.isEmpty(userDTO.getPhoneNumber())) {
 			throw new ApplicationException(ERROR_MSG + "PhoneNumber");
 		}
-		return true;
 
 	}
 

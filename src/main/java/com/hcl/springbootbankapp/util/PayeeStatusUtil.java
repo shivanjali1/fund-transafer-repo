@@ -6,5 +6,8 @@ public class PayeeStatusUtil {
 	public static final String DELETE_PENDING = "DELETE_PENDING";
 	public static final String DELETE_COMPLETED = "DELETED";
 	
+	private PayeeStatusUtil() {
+		
+	}
 
 }
