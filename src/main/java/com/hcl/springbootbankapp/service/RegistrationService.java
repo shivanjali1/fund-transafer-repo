@@ -32,13 +32,16 @@ public class RegistrationService {
 	 * @return returns registered user 
 	 */
 	public User registerUser(User lUser) {
+		
+		String customerId =  lUser.getFirstName().substring(0,3)+lUser.getPhoneNumber().substring(0,3).substring(0,3);
+		lUser.setCustomerId(customerId);
 		User savedUser = userRepository.save(lUser);
+		
 		Long accountNo = (long) (Math.random() * 100000 + 3333300000L);
-
 		Account account = new Account();
 		account.setAccountBalance(10000.0);
 		account.setAccountNo(accountNo);
-		//account.setUserName(savedUser.getUsername());
+		account.setUserId(savedUser.getId());
 
 		accountRepository.save(account);
 		return savedUser;
