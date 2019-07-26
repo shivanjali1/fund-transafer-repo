@@ -1,18 +1,16 @@
 package com.hcl.springbootbankapp.controller;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hcl.springbootbankapp.entity.User;
+import com.hcl.springbootbankapp.DTO.UserDTO;
+import com.hcl.springbootbankapp.exception.ApplicationException;
 import com.hcl.springbootbankapp.service.RegistrationService;
 
 /*
@@ -22,76 +20,52 @@ import com.hcl.springbootbankapp.service.RegistrationService;
 @RequestMapping("/register")
 public class RegistrationController {
 
+	private static final String ERROR_MSG = "Mandetory Element missing : ";
+
 	@Autowired
 	RegistrationService registrationService;
 
 	/*
 	 * This method is for user registration
+	 * 
 	 * @param user gets username and password
-	 * @return returns registered user 
+	 * 
+	 * @return returns registered user
 	 */
 	@PostMapping("/user")
-	public ResponseEntity<?> registerUser(@RequestBody User user) {
-		boolean isValidUser;
-		User registeredUser = null;
-
-		try {
-			isValidUser = validateUser(user);
-		} catch (Exception e) {
-			System.out.println("Invalid user data. Error Message : " + e.getMessage());
-			return new ResponseEntity<String>("Invalid user data. Error Message : " + e.getMessage(),
-					HttpStatus.BAD_REQUEST);
-		}
-
-		if (isValidUser) {
-			registeredUser = registrationService.registerUser(user);
-		}
-
-		if (registeredUser != null) {
-			System.out.println("User sucessfully registered");
-			return new ResponseEntity<User>(registeredUser, HttpStatus.OK);
-		} else {
-			return new ResponseEntity<String>("Not able to register User", HttpStatus.BAD_REQUEST);
-		}
+	public ResponseEntity<?> registerUser(@RequestBody UserDTO userDTO) throws ApplicationException {
+		validateUser(userDTO);
+		return new ResponseEntity<>(registrationService.registerUser(userDTO), HttpStatus.OK);
 	}
 
-	/*
-	 * This method is to get all users
-	 * @return returns list of all users
-	 */
-	@GetMapping("/users")
-	public List<User> getAllUsers() {
-		return registrationService.getUser();
-	}
+	private boolean validateUser(UserDTO userDTO) throws ApplicationException {
 
-	private boolean validateUser(User user) throws Exception {
-
-		if (StringUtils.isEmpty(user.getAddress())) {
-			throw new Exception("Mandetory element missing: Address");
+		if (StringUtils.isEmpty(userDTO.getAddress())) {
+			throw new ApplicationException(ERROR_MSG + "Address");
 		}
-		if (StringUtils.isEmpty(user.getDOB())) {
-			throw new Exception("Mandetory element missing: Date of birth");
+		if (StringUtils.isEmpty(userDTO.getDOB())) {
+			throw new ApplicationException(ERROR_MSG + "Date of birth");
 		}
-		if (StringUtils.isEmpty(user.getEmail())) {
-			throw new Exception("Mandetory element missing: Email");
+		if (StringUtils.isEmpty(userDTO.getEmail())) {
+			throw new ApplicationException(ERROR_MSG + "Email");
 		}
-		if (StringUtils.isEmpty(user.getFirstName())) {
-			throw new Exception("Mandetory element missing: FirstName");
+		if (StringUtils.isEmpty(userDTO.getFirstName())) {
+			throw new ApplicationException(ERROR_MSG + "FirstName");
 		}
-		if (StringUtils.isEmpty(user.getGender())) {
-			throw new Exception("Mandetory element missing: Gender");
+		if (StringUtils.isEmpty(userDTO.getGender())) {
+			throw new ApplicationException(ERROR_MSG + "Gender");
 		}
-		if (StringUtils.isEmpty(user.getLastName())) {
-			throw new Exception("Mandetory element missing: LastName");
+		if (StringUtils.isEmpty(userDTO.getLastName())) {
+			throw new ApplicationException(ERROR_MSG + "LastName");
 		}
-		if (StringUtils.isEmpty(user.getUsername())) {
-			throw new Exception("Mandetory element missing: Username");
+		if (StringUtils.isEmpty(userDTO.getUsername())) {
+			throw new ApplicationException(ERROR_MSG + "Username");
 		}
-		if (StringUtils.isEmpty(user.getPassword())) {
-			throw new Exception("Mandetory element missing: Password");
+		if (StringUtils.isEmpty(userDTO.getPassword())) {
+			throw new ApplicationException(ERROR_MSG + "Password");
 		}
-		if (StringUtils.isEmpty(user.getPhoneNumber())) {
-			throw new Exception("Mandetory element missing: PhoneNumber");
+		if (StringUtils.isEmpty(userDTO.getPhoneNumber())) {
+			throw new ApplicationException(ERROR_MSG + "PhoneNumber");
 		}
 		return true;
 

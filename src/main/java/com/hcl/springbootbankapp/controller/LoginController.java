@@ -35,9 +35,7 @@ public class LoginController {
 		List<TransactionHistory> transactions=null;
 		try {
 			 transactions = loginService.loginUser(user);
-			System.out.println("User is sucessfully login");
 		} catch (Exception e) {
-			System.out.println(e.getMessage());
 			return new ResponseEntity<String>(e.getMessage(), HttpStatus.UNAUTHORIZED);
 		}
 		return new ResponseEntity<List<TransactionHistory>>(transactions, HttpStatus.OK);
