@@ -10,7 +10,7 @@ import com.hcl.springbootbankapp.entity.Account;
 @Repository
 public interface AccountRepository extends JpaRepository<Account, Long> {
 	
-	public Account findByUserName(String userName);
+//	public Account findByUserName(String userName);
 	
 	public List<Account> findByAccountNoNotIn(Long accountNo);
 
