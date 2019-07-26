@@ -41,7 +41,7 @@ public class OTPServiceImpl implements OTPService {
 		otp.setTime(LocalDateTime.now());
 		otp.setRefId(tranId);
 		oTPRepository.save(otp);
-		emailServiceImpl.sendSimpleMessage(sub,message, emailId);
+		emailServiceImpl.sendSimpleMessage(sub,message+otpCode, emailId);
 		return otp;
 	}
 

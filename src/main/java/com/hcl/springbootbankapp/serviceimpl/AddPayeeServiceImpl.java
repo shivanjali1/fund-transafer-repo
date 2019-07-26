@@ -15,6 +15,10 @@ import com.hcl.springbootbankapp.util.PayeeStatusUtil;
 @Service
 public class AddPayeeServiceImpl implements AddPayeeService {
 
+	private final static String bodyInit = " Dear Custemer, Your OTP for the Adding Payee is ";
+	private final static String bodyFinal = "";
+	
+	
 	@Autowired
 	UserRepository userRepository;
 	
@@ -34,9 +38,9 @@ public class AddPayeeServiceImpl implements AddPayeeService {
 		payee.setStatus(PayeeStatusUtil.ADD_PENDING);
 		payee.setPayeeId(payeeUser.getId());
 		payee.setCustId(loggedUser.getId());
-		payeeRepository.save(payee);
+		payee = payeeRepository.save(payee);
 		
-		oTPService.generateOTP(payeeUser.getId(), loggedUser.getId(), payeeUser.getEmail());
+		oTPService.generateOTP(loggedUser.getCustomerId(), payee.getId(), loggedUser.getEmail(),bodyInit);
 		
 		ResponseDTO responseObject = new ResponseDTO();
 		responseObject.setHttpStatus(HttpStatus.OK);
