@@ -17,8 +17,10 @@ import com.hcl.springbootbankapp.util.PayeeStatusUtil;
 @Service
 public class AddPayeeServiceImpl implements AddPayeeService {
 
-	private final static String bodyInit = " Dear Custemer, Your OTP for the Adding Payee is ";
-	private final static String bodyFinal = "";
+	private final static String bodyInit = " Dear Custemer, Your OTP for the Adding Payee ";
+	private final static String bodyMiddle = "with id ";
+	private final static String bodyFinal = " and name  ";
+	private final static String bodyFinalAgain = " is: ";
 	
 	
 	@Autowired
@@ -32,25 +34,33 @@ public class AddPayeeServiceImpl implements AddPayeeService {
 	@Override
 	public ResponseDTO addPayee(String loggedUserId, String payeeUserId) {
 		// TODO Auto-generated method stub
-		
+		ResponseDTO responseObject = new ResponseDTO();
+
 		Optional<User> payeeUser = userRepository.findByCustomerId(payeeUserId);
 		Optional<User> loggedUser = userRepository.findByCustomerId(loggedUserId);
+		if(payeeUser.isPresent() && loggedUser.isPresent()) {
+			Payee payee = new Payee();
+			payee.setStatus(PayeeStatusUtil.ADD_PENDING);
+			payee.setPayeeId((payeeUser.get()).getId());
+			payee.setCustId((loggedUser.get()).getId());
+			payee = payeeRepository.save(payee);
+			
+			oTPService.generateOTP((loggedUser.get()).getCustomerId(), payee.getId(), 
+					(loggedUser.get()).getEmail(),bodyInit+bodyMiddle+(payeeUser.get()).getId()+bodyFinal+(payeeUser.get()).getFirstName()+bodyFinalAgain);
+			
+			responseObject.setHttpStatus(HttpStatus.OK);
+			responseObject.setData(payeeUser);
+			responseObject.setMessage("Transaction Initiated");
+			
+			return responseObject;
+		}
 		
-		Payee payee = new Payee();
-		payee.setStatus(PayeeStatusUtil.ADD_PENDING);
-		payee.setPayeeId((payeeUser.get()).getId());
-		payee.setCustId((loggedUser.get()).getId());
-		payee = payeeRepository.save(payee);
-		
-		oTPService.generateOTP((loggedUser.get()).getCustomerId(), payee.getId(), (loggedUser.get()).getEmail(),bodyInit);
-		
-		ResponseDTO responseObject = new ResponseDTO();
-		responseObject.setHttpStatus(HttpStatus.OK);
-		responseObject.setData(payeeUser);
-		responseObject.setMessage("Transaction Initiated");
-		
+		responseObject.setHttpStatus(HttpStatus.BAD_REQUEST);
+		responseObject.setData(null);
+		responseObject.setMessage("Initiation Failed");
 		
 		return responseObject;
+		
 	}
 
 }
