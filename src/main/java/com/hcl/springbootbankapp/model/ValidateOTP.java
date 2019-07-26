@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class ValidateOTP {
 
-	private Long customerId;
+	private String customerId;
 	
 	private Long referenceId;
 	
