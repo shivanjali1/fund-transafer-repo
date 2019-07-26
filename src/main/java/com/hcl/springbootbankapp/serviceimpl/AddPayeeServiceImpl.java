@@ -81,10 +81,13 @@ public class AddPayeeServiceImpl implements AddPayeeService {
 	public ResponseDTO validateOtp(ValidateOTP validateOTP) throws ApplicationException {
 		
 		if(otpServiceImpl.validate(validateOTP.getCustomerId(), validateOTP.getReferenceId(), validateOTP.getOtp())) {
+			
+			Payee payee = payeeRepository.getPayeeByRefId(validateOTP.getReferenceId());
+			payee.setStatus(PayeeStatusUtil.ADD_COMPLETED);
+			payeeRepository.save(payee);
 			ResponseDTO responseObject = new ResponseDTO();
 			responseObject.setHttpStatus(HttpStatus.NO_CONTENT);
 			responseObject.setMessage("OTP validated for adding payee");
-			payeeRepository.updatePayeeStatus(validateOTP.getReferenceId(), PayeeStatusUtil.ADD_COMPLETED);
 			return responseObject;
 		}
 		throw new ApplicationException("OTP is not valid for adding payee ");
