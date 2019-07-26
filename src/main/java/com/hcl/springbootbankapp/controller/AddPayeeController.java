@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hcl.springbootbankapp.DTO.ResponseDTO;
+
+import com.hcl.springbootbankapp.dto.ResponseDTO;
 import com.hcl.springbootbankapp.exception.ApplicationException;
 import com.hcl.springbootbankapp.model.ValidateOTP;
 import com.hcl.springbootbankapp.service.AddPayeeService;
